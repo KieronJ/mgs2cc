@@ -1,0 +1,7 @@
+# -*- mode: gitignore; -*-
+gen_clear_code
+
+*.o
+*.out
+
+.vscode/
