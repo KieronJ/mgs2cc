@@ -491,6 +491,7 @@ void print_info(int platform, int version, unsigned int code[4])
     int plant_clears;
 
     int level;
+    int mode;
     int dogtags;
 
     radar = code[0] & 0x3;
@@ -512,6 +513,7 @@ void print_info(int platform, int version, unsigned int code[4])
     plant_clears = (code[2] >> 26) & 0x3F;
 
     level = (code[3] >> 2) & 0x7;
+    mode = (code[3] >> 5) & 0x3;
     dogtags = (code[3] >> 7) & 0x7F;
 
     switch (platform)
@@ -526,20 +528,13 @@ void print_info(int platform, int version, unsigned int code[4])
     default: printf("VERSION:                UNKNOWN (%d)\n", version);
     }
 
-    printf("CLEAR TIME:             %02d:%02d:%02d\n", time / 3600, (time / 60) % 60, time % 60);
-    printf("TOTAL DAMAGE:           %d\n", damage);
-    printf("SHOTS FIRED:            %d\n", shots);
-    printf("ALERT MODE:             %d\n", alerts);
-    printf("CLEARING ESCAPE:        %d\n", escapes);
-    printf("ENEMIES KILLED:         %d\n", kills);
-    printf("MECH DESTRUCTION:       %d\n", mechs);
-    printf("CONTINUES:              %d\n", continues);
-    printf("RATIONS USED:           %d\n", rations);
-    printf("SAVES:                  %d\n", saves);
-    printf("\n");
-
-    printf("RADAR:                  %s\n", radar ? "USED" : "NOT USED");
-    printf("USE OF SPECIAL ITEM:    %s\n", special ? "YES" : "NO");
+    switch (mode)
+    {
+    case 0:  printf("MODE:                   TANKER-PLANT\n"); break;
+    case 1:  printf("MODE:                   TANKER\n"); break;
+    case 2:  printf("MODE:                   PLANT\n"); break;
+    default: printf("MODE:                   INVALID (%d)\n", mode);
+    }
 
     switch (level)
     {
@@ -552,6 +547,21 @@ void print_info(int platform, int version, unsigned int code[4])
     default: printf("GAME LEVEL:             UNKNOWN (%d)\n", level);
     }
 
+    printf("\n");
+    printf("CLEAR TIME:             %02d:%02d:%02d\n", time / 3600, (time / 60) % 60, time % 60);
+    printf("TOTAL DAMAGE:           %d\n", damage);
+    printf("SHOTS FIRED:            %d\n", shots);
+    printf("ALERT MODE:             %d\n", alerts);
+    printf("CLEARING ESCAPE:        %d\n", escapes);
+    printf("ENEMIES KILLED:         %d\n", kills);
+    printf("MECH DESTRUCTION:       %d\n", mechs);
+    printf("CONTINUES:              %d\n", continues);
+    printf("RATIONS USED:           %d\n", rations);
+    printf("SAVES:                  %d\n", saves);
+
+    printf("\n");
+    printf("RADAR:                  %s\n", radar ? "USED" : "NOT USED");
+    printf("USE OF SPECIAL ITEM:    %s\n", special ? "YES" : "NO");
     printf("DOG TAG COLLECTION:     %d%%\n", dogtags);
     printf("TANKER CHAPTER CLEARED: %d\n", tanker_clears);
     printf("PLANT CHAPTER CLEARED:  %d\n", plant_clears);
