@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 .PHONY: all clean
 
-TARGET      = gen_clear_code
+TARGET      = dumpcc
 SRCS        = clear_code.c
 OBJS        = $(SRCS:.c=.o)
 
