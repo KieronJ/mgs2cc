@@ -518,13 +518,18 @@ void print_info(int platform, int version, unsigned int code[4])
 
     switch (platform)
     {
+    case 0:  printf("PLATFORM:               PlayStation 2\n"); break;
+    case 1:  printf("PLATFORM:               Xbox\n"); break;
     case 2:  printf("PLATFORM:               PC\n"); break;
     default: printf("PLATFORM:               UNKNOWN (%d)\n", platform);
     }
 
     switch (version)
     {
+    case 0:  printf("VERSION:                JAPAN\n"); break;
+    case 1:  printf("VERSION:                AMERICA\n"); break;
     case 2:  printf("VERSION:                EUROPE\n"); break;
+    case 3:  printf("VERSION:                KOREA\n"); break;
     default: printf("VERSION:                UNKNOWN (%d)\n", version);
     }
 
