@@ -12,12 +12,21 @@
 #define CODE_BASE       26  /* A-Z */
 #define CODE_SIZE       28  /* Substance PC */
 #define CODE_BITS       110 /* Substance PC */
-#define REGION_BITS     2
+#define VERSION_BITS    2
 #define PLATFORM_BITS   2
 #define CRC_BITS        7
 #define KEY_BITS        5
-#define ALL_BITS        (CODE_BITS + REGION_BITS + PLATFORM_BITS + CRC_BITS + KEY_BITS)
+#define ALL_BITS        (CODE_BITS + VERSION_BITS + PLATFORM_BITS + CRC_BITS + KEY_BITS)
 #define WORK_SIZE       64
+
+#define PLATFORM_PS2    0
+#define PLATFORM_XBOX   1
+#define PLATFORM_PC     2
+
+#define VERSION_JP      0
+#define VERSION_US      1
+#define VERSION_EU      2
+#define VERSION_KO      3
 
 typedef struct {
     char data[WORK_SIZE];
@@ -400,8 +409,8 @@ int encrypt(
     memcpy(bs.data, in, HOWMANY(in_bits, 8));
     bs.bits = in_bits;
 
-    emplace_bits_direct(&bs, 2, PLATFORM_BITS); /* platform? */
-    emplace_bits_direct(&bs, 2, REGION_BITS);   /* region? */
+    emplace_bits_direct(&bs, VERSION_US, VERSION_BITS);
+    emplace_bits_direct(&bs, PLATFORM_PS2, PLATFORM_BITS);
 
     append_secrets(&bs, key);
 
@@ -422,7 +431,7 @@ int decrypt(
     const void *in,
     int in_bits,
     int *platform,
-    int *region)
+    int *version)
 {
     BITSTREAM bs;
     int i;
@@ -459,8 +468,8 @@ int decrypt(
         return 0;
     }
 
-    *region = extract_bits_direct(&bs, REGION_BITS);
     *platform = extract_bits_direct(&bs, PLATFORM_BITS);
+    *version = extract_bits_direct(&bs, VERSION_BITS);
 
     bs.bits = CODE_BITS;
     trim_bitstream(&bs);
@@ -518,19 +527,19 @@ void print_info(int platform, int version, unsigned int code[4])
 
     switch (platform)
     {
-    case 0:  printf("PLATFORM:               PlayStation 2\n"); break;
-    case 1:  printf("PLATFORM:               Xbox\n"); break;
-    case 2:  printf("PLATFORM:               PC\n"); break;
-    default: printf("PLATFORM:               UNKNOWN (%d)\n", platform);
+    case PLATFORM_PS2:  printf("PLATFORM:               PlayStation 2\n"); break;
+    case PLATFORM_XBOX: printf("PLATFORM:               Xbox\n"); break;
+    case PLATFORM_PC:   printf("PLATFORM:               PC\n"); break;
+    default:            printf("PLATFORM:               UNKNOWN (%d)\n", platform);
     }
 
     switch (version)
     {
-    case 0:  printf("VERSION:                JAPAN\n"); break;
-    case 1:  printf("VERSION:                AMERICA\n"); break;
-    case 2:  printf("VERSION:                EUROPE\n"); break;
-    case 3:  printf("VERSION:                KOREA\n"); break;
-    default: printf("VERSION:                UNKNOWN (%d)\n", version);
+    case VERSION_JP: printf("VERSION:                JAPAN\n"); break;
+    case VERSION_US: printf("VERSION:                AMERICA\n"); break;
+    case VERSION_EU: printf("VERSION:                EUROPE\n"); break;
+    case VERSION_KO: printf("VERSION:                KOREA\n"); break;
+    default:         printf("VERSION:                UNKNOWN (%d)\n", version);
     }
 
     switch (mode)
